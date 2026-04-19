@@ -11,7 +11,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-3"><strong>D дет:</strong> @Model.D мм</div>
-                <div class="col-md-3"><strong>dd дет:</strong> @Model.dd мм</div>
+                <div class="col-md-3"><strong>d дет:</strong> @Model.dd мм</div>
                 <div class="col-md-3"><strong>H дет:</strong> @Model.H мм</div>
                 <div class="col-md-3"><strong>Плотность:</strong> @Model.Density г/см³</div>
                 <div class="col-md-3"><strong>X:</strong> @Model.x</div>
@@ -39,7 +39,7 @@
             <ul class="list-group">
                 <li class="list-group-item">H заготовки: @Model.H1 + @Model.b_no_probe = <strong>@Model.H_forg_no_probe ±@Model.delta2_no_probe</strong></li>
                 <li class="list-group-item">D заготовки: @Model.D + @Model.b_no_probe = <strong>@Model.D_forg_no_probe ±@Model.delta2_no_probe</strong></li>
-                <li class="list-group-item">dd заготовки: @Model.dd - @Model.b_no_probe = <strong>@Model.dd_forg_no_probe ±@(3 * Model.delta2_no_probe)</strong></li>
+                <li class="list-group-item">d заготовки: @Model.dd - @Model.b_no_probe = <strong>@Model.dd_forg_no_probe ±@(3 * Model.delta2_no_probe)</strong></li>
             </ul>
         </div>
     </div>
@@ -74,7 +74,7 @@
         </div>
     </div>
 
-    <!-- размера -->
+    <!-- размеры -->
     <div class="card mb-4 border-primary">
         <div class="card-header bg-primary text-white fw-bold">4. Размеры поковки (С ПРОБОЙ)</div>
         <div class="card-body">
@@ -82,7 +82,7 @@
             <ul class="list-group">
                 <li class="list-group-item">H заготовки: @Model.H2 + @Model.b_probe = <strong>@Model.H_forg_probe ±@Model.delta2_probe</strong></li>
                 <li class="list-group-item">D заготовки: @Model.D + @Model.b_probe = <strong>@Model.D_forg_probe ±@Model.delta2_probe</strong></li>
-                <li class="list-group-item">dd заготовки: @Model.dd - @Model.b_probe = <strong>@Model.dd_forg_probe ±@(3 * Model.delta2_probe)</strong></li>
+                <li class="list-group-item">d заготовки: @Model.dd - @Model.b_probe = <strong>@Model.dd_forg_probe ±@(3 * Model.delta2_probe)</strong></li>
             </ul>
         </div>
     </div>

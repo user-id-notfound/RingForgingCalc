@@ -40,16 +40,16 @@ namespace ForgingCalc.Services
             int rectW = 500;
             int rectH = 80;
             int holeW = 200;
-            int wall = (rectW - holeW) / 2;
+            int wall = 150;
 
-            double scaleX = (double)rectW / D_f;
-            double scaleY = (double)rectH / H_f;
+            const double detX1 = 7;
+            const double detX2 = 143;
+            const double detX3 = 357;
+            const double detX4 = 493;
+            const double detY1 = 7;
+            const double detY2 = 73;
 
-            double offsetX = (D_f - D_det) / 2 * scaleX;
-            double offsetY = (H_f - H_det) / 2 * scaleY;
-            double offsetHole = (dd_det - dd_f) / 2 * scaleX;
-
-            var svg = $@"<svg width=""{w}"" height=""{h}"" xmlns=""http://w3.org"" style=""background:#fff; font-family: 'Courier New', monospace;"">
+            var svg = $@"<svg width=""{w}"" height=""{h}"" xmlns=""http://www.w3.org/2000/svg"" style=""background:#fff; font-family: 'Courier New', monospace;"">
   <defs>
     <marker id=""arrL"" markerWidth=""10"" markerHeight=""7"" refX=""1"" refY=""3.5"" orient=""auto""><polygon points=""10 0, 0 3.5, 10 7""/></marker>
     <marker id=""arrR"" markerWidth=""10"" markerHeight=""7"" refX=""9"" refY=""3.5"" orient=""auto""><polygon points=""0 0, 10 3.5, 0 7""/></marker>
@@ -67,37 +67,23 @@ namespace ForgingCalc.Services
 
   <g transform=""translate({cX - rectW / 2}, {cY - rectH / 2})"">
     
-    <!-- 1. ПОКОВКА (СИНЯЯ ГРАНИЦА И ШТРИХОВКА) -->
-    <!-- Левая заштрихованная часть -->
+    <!-- Левая заштрихованная часть поковки -->
     <rect x=""0"" y=""0"" width=""{wall}"" height=""{rectH}"" fill=""url(#hatch)"" stroke=""#007bff"" stroke-width=""2""/>
-    <!-- Правая заштрихованная часть -->
+    <!-- Правая заштрихованная часть поковки -->
     <rect x=""{rectW - wall}"" y=""0"" width=""{wall}"" height=""{rectH}"" fill=""url(#hatch)"" stroke=""#007bff"" stroke-width=""2""/>
     <!-- Центральное отверстие поковки -->
     <rect x=""{wall}"" y=""0"" width=""{holeW}"" height=""{rectH}"" fill=""#fff"" stroke=""#007bff"" stroke-width=""1.5""/>
 
-    <!-- 2. ДЕТАЛЬ -->
-    // Левая вертикальная стенка детали
-double detX1 = offsetX; 
-double detX2 = wall - offsetHole;
-double detX3 = rectW - wall + offsetHole;
-double detX4 = rectW - offsetX;
-double detY1 = offsetY;
-double detY2 = rectH - offsetY;
+    <!-- Левая вертикальная стенка детали -->
+    <rect x=""{detX1}"" y=""{detY1}"" width=""{detX2 - detX1}"" height=""{detY2 - detY1}"" fill=""none"" stroke=""#000"" stroke-width=""2""/>
+    <!-- Правая часть детали -->
+    <rect x=""{detX3}"" y=""{detY1}"" width=""{detX4 - detX3}"" height=""{detY2 - detY1}"" fill=""none"" stroke=""#000"" stroke-width=""2""/>
+    <!-- Соединительные горизонтальные линии (границы отверстия детали) -->
+    <line x1=""{detX2}"" y1=""{detY1}"" x2=""{detX3}"" y2=""{detY1}"" stroke=""#000"" stroke-width=""2""/>
+    <line x1=""{detX2}"" y1=""{detY2}"" x2=""{detX3}"" y2=""{detY2}"" stroke=""#000"" stroke-width=""2""/>
 
-svg += $@""
-<rect x=""""{{detX1}}"""" y=""""{{detY1}}"""" width=""""{{detX2 - detX1}}"""" height=""""{{detY2 - detY1}}"""" fill=""""none"""" stroke=""""#000"""" stroke-width=""""2""""/>
-
-<!-- Правая часть детали -->
-<rect x=""""{{detX3}}"""" y=""""{{detY1}}"""" width=""""{{detX4 - detX3}}"""" height=""""{{detY2 - detY1}}"""" fill=""""none"""" stroke=""""#000"""" stroke-width=""""2""""/>
-
-<!-- Соединительные горизонтальные линии (границы отверстия детали) -->
-<line x1=""""{{detX2}}"""" y1=""""{{detY1}}"""" x2=""""{{detX3}}"""" y2=""""{{detY1}}"""" stroke=""""#000"""" stroke-width=""""2""""/>
-<line x1=""""{{detX2}}"""" y1=""""{{detY2}}"""" x2=""""{{detX3}}"""" y2=""""{{detY2}}"""" stroke=""""#000"""" stroke-width=""""2""""/>"";
-
-    <!-- 3. ОСЕВАЯ ЛИНИЯ -->
     <line x1=""{rectW / 2}"" y1=""-40"" x2=""{rectW / 2}"" y2=""120"" stroke=""#f60"" stroke-dasharray=""20,5,5,5"" stroke-width=""1""/>
 
-    <!-- 4. РАЗМЕРНЫЕ ЛИНИИ -->
     <line x1=""{wall}"" y1=""0"" x2=""{wall}"" y2=""-30"" stroke=""#000""/>
     <line x1=""{rectW - wall}"" y1=""0"" x2=""{rectW - wall}"" y2=""-30"" stroke=""#000""/>
     <line x1=""{wall}"" y1=""-20"" x2=""{rectW - wall}"" y2=""-20"" stroke=""#000"" marker-start=""url(#arrL)"" marker-end=""url(#arrR)""/>

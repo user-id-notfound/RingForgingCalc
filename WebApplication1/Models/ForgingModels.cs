@@ -22,7 +22,6 @@
         public int z { get; set; }
         public double Q { get; set; }
         public double Density { get; set; } = 7.85;
-
         public double H1 { get; set; }
         public double H2 { get; set; }
         public int b_no_probe { get; set; }
