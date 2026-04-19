@@ -20,39 +20,37 @@
 | **SVG** | - | Визуализация чертежей |
 | **jQuery Validation** | - | Клиентская валидация |
 
-## Структура проекта
+## 📁 Структура проекта
 
 ```
 RingForgingCalc/
+── Properties/
+├── wwwroot/
 ├── Controllers/
-│   ├── HomeController.cs
-│   └── CalculationController.cs
+│   ├── ForgingController.cs
+│   └── HomeController.cs
 ├── Models/
-│   ├── CalculationInputModel.cs
-│   ├── CalculationResult.cs
-│   └── ViewModels/
-│       └── ResultViewModel.cs
+│   ├── ErrorViewModel.cs
+│   └── ForgingModels.cs
 ├── Services/
-│   ├── ICalculationService.cs
-│   ├── CalculationService.cs
-│   ├── IDrawingService.cs
-│   └── DrawingService.cs
+│   ├── DrawingService.cs
+│   └── ToleranceService.cs
 ├── Views/
-│   ├── Home/
-│   │   └── Index.cshtml
-│   ├── Calculation/
+│   ├── Forging/
+│   │   ├── Index.cshtml
 │   │   └── Result.cshtml
+│   ├── Home/
+│   │   ├── Index.cshtml
+│   │   └── Privacy.cshtml
 │   └── Shared/
 │       ├── _Layout.cshtml
-│       └── _ValidationScriptsPartial.cshtml
-├── wwwroot/
-│   ├── css/
-│   │   └── site.css
-│   └── lib/
+│       ├── _ValidationScriptsPartial.cshtml
+│       ├── Error.cshtml
+│       ├── _ViewImports.cshtml
+│       └── _ViewStart.cshtml
 ├── appsettings.json
-├── Program.cs
-├── RingForgingCalc.csproj
-└── README.md
+├── appsettings.Development.json
+└── Program.cs
 ```
 
 ## Использование
