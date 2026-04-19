@@ -20,8 +20,9 @@
 | **SVG** | - | Визуализация чертежей |
 | **jQuery Validation** | - | Клиентская валидация |
 
-## 📁 Структура проекта
+## Структура проекта
 
+```
 RingForgingCalc/
 ├── Controllers/
 │   ├── HomeController.cs
@@ -52,6 +53,7 @@ RingForgingCalc/
 ├── Program.cs
 ├── RingForgingCalc.csproj
 └── README.md
+```
 
 ## Использование
 
