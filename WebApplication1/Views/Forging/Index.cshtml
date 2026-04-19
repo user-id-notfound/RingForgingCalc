@@ -1,0 +1,59 @@
+﻿@model ForgingCalc.Models.ForgingInput
+@{
+    ViewData["Title"] = "Расчет поковки (кольцо раскатное)";
+}
+
+<div class="container mt-4">
+    <h3 class="mb-3">Заполните все поля для выполнения расчета</h3>
+
+    <form asp-action="Calculate" method="post" class="card p-4 shadow-sm">
+        
+        <h5 class="text-primary mb-3">Деталь - чистовые размеры</h5>
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3"><label class="form-label fw-bold">D - Наружный диаметр детали, мм</label></div>
+            <div class="col-md-3"><input type="number" step="any" asp-for="D" class="form-control" value="1360" required /></div>
+        </div>
+
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3"><label class="form-label fw-bold">dd - Внутренний диаметр детали, мм</label></div>
+            <div class="col-md-3"><input type="number" step="any" asp-for="dd" class="form-control" value="540" required /></div>
+        </div>
+
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3"><label class="form-label fw-bold">H - Высота детали, мм</label></div>
+            <div class="col-md-3"><input type="number" step="any" asp-for="H" class="form-control" value="215" required /></div>
+        </div>
+
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-3"><label class="form-label fw-bold">Напуск на термообработку, мм</label></div>
+            <div class="col-md-3"><input type="number" step="any" asp-for="AllowanceHT" class="form-control" value="0" /></div>
+        </div>
+
+        <hr />
+        <h5 class="text-primary mb-3">Технологические параметры</h5>
+        
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3"><label class="form-label fw-bold">X - Количество деталей в поковке</label></div>
+            <div class="col-md-3"><input type="number" asp-for="x" class="form-control" value="2" required /></div>
+        </div>
+
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3"><label class="form-label fw-bold">Y - Длина реза, мм</label></div>
+            <div class="col-md-3"><input type="number" step="any" asp-for="y" class="form-control" value="20" /></div>
+        </div>
+
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3"><label class="form-label fw-bold">Z - Количество резов (X-1)</label></div>
+            <div class="col-md-3"><input type="number" asp-for="z" class="form-control" value="1" readonly /></div>
+        </div>
+
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3"><label class="form-label fw-bold">Q - Напуск на пробу, мм</label></div>
+            <div class="col-md-3"><input type="number" step="any" asp-for="Q" class="form-control" value="60" /></div>
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary btn-lg px-5">Рассчитать</button>
+        </div>
+    </form>
+</div>

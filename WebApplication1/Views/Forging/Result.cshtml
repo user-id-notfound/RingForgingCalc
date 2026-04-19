@@ -1,0 +1,153 @@
+﻿@model ForgingCalc.Models.ForgingResult
+@{
+    ViewData["Title"] = "Результаты расчета поковки";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Результаты расчета поковки</h2>
+
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white fw-bold">Вводные данные</div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3"><strong>D дет:</strong> @Model.D мм</div>
+                <div class="col-md-3"><strong>dd дет:</strong> @Model.dd мм</div>
+                <div class="col-md-3"><strong>H дет:</strong> @Model.H мм</div>
+                <div class="col-md-3"><strong>Плотность:</strong> @Model.Density г/см³</div>
+                <div class="col-md-3"><strong>X:</strong> @Model.x</div>
+                <div class="col-md-3"><strong>Y:</strong> @Model.y мм</div>
+                <div class="col-md-3"><strong>Z:</strong> @Model.z</div>
+                <div class="col-md-3"><strong>Q:</strong> @Model.Q мм</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- высоты -->
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white fw-bold">1. Расчет высот заготовок</div>
+        <div class="card-body">
+            <p><strong>H1</strong> (высота без пробы) = H * X + Y * Z + напуск ТО = @Model.H * @Model.x + @Model.y * @Model.z + 0 = <strong>@Model.H1 мм</strong></p>
+            <p><strong>H2</strong> (высота с пробой) = H * X + Y * Z + Q + напуск ТО = @Model.H * @Model.x + @Model.y * @Model.z + @Model.Q + 0 = <strong>@Model.H2 мм</strong></p>
+        </div>
+    </div>
+
+    <!-- размеры (проба-) -->
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white fw-bold">2. Размеры поковки (БЕЗ ПРОБЫ)</div>
+        <div class="card-body">
+            <p>По таблице допусков (H1=@Model.H1, D=@Model.D): <strong>β = @Model.b_no_probe</strong>, <strong>±Δ/2 = @Model.delta2_no_probe</strong></p>
+            <ul class="list-group">
+                <li class="list-group-item">H заготовки: @Model.H1 + @Model.b_no_probe = <strong>@Model.H_forg_no_probe ±@Model.delta2_no_probe</strong></li>
+                <li class="list-group-item">D заготовки: @Model.D + @Model.b_no_probe = <strong>@Model.D_forg_no_probe ±@Model.delta2_no_probe</strong></li>
+                <li class="list-group-item">dd заготовки: @Model.dd - @Model.b_no_probe = <strong>@Model.dd_forg_no_probe ±@(3 * Model.delta2_no_probe)</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- масса (проба-) -->
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white fw-bold">3. Расчет массы (БЕЗ ПРОБЫ)</div>
+        <div class="card-body">
+            <p>Удельный вес стали ρ = 7.85 г/см³</p>
+            <table class="table table-sm table-bordered">
+                <thead class="bg-primary text-white">
+                    <tr><th>Параметр</th><th>Номинал</th><th>Максимал</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>V диска (м³)</td>
+                        <td>@Model.V_disk_nom_np</td>
+                        <td>@Model.V_disk_max_np</td>
+                    </tr>
+                    <tr>
+                        <td>V отв. (м³)</td>
+                        <td>@Model.V_hole_nom_np</td>
+                        <td>@Model.V_hole_max_np</td>
+                    </tr>
+                    <tr class="table-active">
+                        <td>Масса кольца (т)</td>
+                        <td><strong>@Model.MassNominalNoProbe</strong></td>
+                        <td><strong>@Model.MassMaxNoProbe</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- размера -->
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white fw-bold">4. Размеры поковки (С ПРОБОЙ)</div>
+        <div class="card-body">
+            <p>По таблице допусков (H2=@Model.H2, D=@Model.D): <strong>β = @Model.b_probe</strong>, <strong>±Δ/2 = @Model.delta2_probe</strong></p>
+            <ul class="list-group">
+                <li class="list-group-item">H заготовки: @Model.H2 + @Model.b_probe = <strong>@Model.H_forg_probe ±@Model.delta2_probe</strong></li>
+                <li class="list-group-item">D заготовки: @Model.D + @Model.b_probe = <strong>@Model.D_forg_probe ±@Model.delta2_probe</strong></li>
+                <li class="list-group-item">dd заготовки: @Model.dd - @Model.b_probe = <strong>@Model.dd_forg_probe ±@(3 * Model.delta2_probe)</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- масса -->
+    <div class="card mb-4 border-primary">
+        <div class="card-header bg-primary text-white fw-bold">5. Расчет массы (С ПРОБОЙ)</div>
+        <div class="card-body">
+            <p>Удельный вес стали ρ = 7.85 г/см³</p>
+            <table class="table table-sm table-bordered">
+                <thead class="bg-primary text-white">
+                    <tr><th>Параметр</th><th>Номинал</th><th>Максимал</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>V диска (м³)</td>
+                        <td>@Model.V_disk_nom_p</td>
+                        <td>@Model.V_disk_max_p</td>
+                    </tr>
+                    <tr>
+                        <td>V отв. (м³)</td>
+                        <td>@Model.V_hole_nom_p</td>
+                        <td>@Model.V_hole_max_p</td>
+                    </tr>
+                    <tr class="table-active">
+                        <td>Масса кольца (т)</td>
+                        <td><strong>@Model.MassNominalProbe</strong></td>
+                        <td><strong>@Model.MassMaxProbe</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ЧЕРТЕЖИ -->
+    <div class="row mt-4">
+        <!-- (проба-) -->
+        <div class="col-12 mb-5">
+            <h4 class="text-primary mb-3">Визуализация чертежа: БЕЗ ПРОБЫ</h4>
+            <div class="border p-3 bg-white shadow-sm">
+                @if (!string.IsNullOrEmpty(Model.SvgNoProbe))
+                {
+                    @Html.Raw(Model.SvgNoProbe)
+                }
+                else
+                {
+                    <p class="text-danger">Чертеж не сгенерирован</p>
+                }
+            </div>
+        </div>
+        
+        <div class="col-12 mb-5">
+            <h4 class="text-primary mb-3">Визуализация чертежа: С ПРОБОЙ</h4>
+            <div class="border p-3 bg-white shadow-sm">
+                @if (!string.IsNullOrEmpty(Model.SvgProbe))
+                {
+                    @Html.Raw(Model.SvgProbe)
+                }
+                else
+                {
+                    <p class="text-danger">Чертеж не сгенерирован</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary mb-5">Изменить параметры</a>
+</div>
