@@ -2,8 +2,13 @@
 
 namespace ForgingCalc.Services
 {
+    /// <summary>
+    /// Сервис для расчёта допусков и массы поковок
+    /// </summary>
     public static class ToleranceService
     {
+        private const double DensityKgPerM3 = 7.85;
+
         private static readonly double[] HBounds = { 150, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1400, 1600, 1800, 2000, 2250, 2500 };
         private static readonly double[] DBounds = { 500, 630, 800, 1000, 1250, 1400, 1600, 1800, 2000, 2250, 2500, 2800, 3150, 3500, 4000, 4500, 5000 };
 
@@ -27,30 +32,94 @@ namespace ForgingCalc.Services
             { (0,0), (0,0), (0,0), (0,0), (0,0), (0,0), (0,0), (0,0), (82,30), (85,32), (91,35), (97,38), (100,41), (108,43), (114,49), (119,51), (125,53) }
         };
 
-        public static (int b, int d2) GetTolerance(double h, double d)
+        /// <summary>
+        /// Получает допуски на основе высоты и диаметра заготовки
+        /// </summary>
+        /// <param name="height">Высота заготовки (мм)</param>
+        /// <param name="diameter">Диаметр заготовки (мм)</param>
+        /// <returns>Кортеж с предельным отклонением размера (b) и отклонением диаметра (d2)</returns>
+        public static (int b, int d2) GetTolerance(double height, double diameter)
         {
-            int hIdx = 0;
-            for (int i = 0; i < HBounds.Length; i++) { if (h <= HBounds[i]) { hIdx = i; break; } if (i == HBounds.Length - 1) hIdx = i + 1; }
-            if (hIdx >= Matrix.GetLength(0)) hIdx = Matrix.GetLength(0) - 1;
+            var hIdx = FindIndex(height, HBounds);
+            var dIdx = FindIndex(diameter, DBounds);
 
-            int dIdx = 0;
-            for (int i = 0; i < DBounds.Length; i++) { if (d <= DBounds[i]) { dIdx = i; break; } if (i == DBounds.Length - 1) dIdx = i + 1; }
-            if (dIdx >= Matrix.GetLength(1)) dIdx = Matrix.GetLength(1) - 1;
+            // Защита от выхода за границы матрицы
+            hIdx = Math.Min(hIdx, Matrix.GetLength(0) - 1);
+            dIdx = Math.Min(dIdx, Matrix.GetLength(1) - 1);
 
             return Matrix[hIdx, dIdx];
         }
 
-        public static (double vOut, double vIn, double massOut, double massIn) CalculateMassDetails(double outerD, double innerD, double length)
+        /// <summary>
+        /// Находит индекс в массиве границ, где значение меньше или равно границе
+        /// </summary>
+        private static int FindIndex(double value, double[] bounds)
         {
-            double rho = 7.85; 
-            double rOut = outerD / 2000.0;
-            double rIn = innerD / 2000.0;
-            double l = length / 1000.0;
+            for (int i = 0; i < bounds.Length; i++)
+            {
+                if (value <= bounds[i])
+                    return i;
+            }
+            return bounds.Length;
+        }
 
-            double volOut = Math.PI * rOut * rOut * l;
-            double volIn = Math.PI * rIn * rIn * l;
+        /// <summary>
+        /// Рассчитывает объём и массу цилиндрической заготовки
+        /// </summary>
+        /// <param name="outerDiameter">Наружный диаметр (мм)</param>
+        /// <param name="innerDiameter">Внутренний диаметр (мм)</param>
+        /// <param name="length">Длина/высота (мм)</param>
+        /// <returns>Детали расчёта массы (объёмы и массы внешнего и внутреннего цилиндров)</returns>
+        public static MassDetails CalculateMassDetails(double outerDiameter, double innerDiameter, double length)
+        {
+            var radii = ConvertToMeters(outerDiameter, innerDiameter, length);
 
-            return (volOut, volIn, volOut * rho, volIn * rho);
+            var volumes = CalculateVolumes(radii.outerRadius, radii.innerRadius, radii.length);
+            var masses = CalculateMasses(volumes.outerVolume, volumes.innerVolume);
+
+            return new MassDetails(
+                volumes.outerVolume,
+                volumes.innerVolume,
+                masses.outerMass,
+                masses.innerMass);
+        }
+
+        private static (double outerRadius, double innerRadius, double length) ConvertToMeters(
+            double outerDiameterMm, double innerDiameterMm, double lengthMm)
+        {
+            return (
+                outerRadius: outerDiameterMm / 2000.0,
+                innerRadius: innerDiameterMm / 2000.0,
+                length: lengthMm / 1000.0);
+        }
+
+        private static (double outerVolume, double innerVolume) CalculateVolumes(
+            double outerRadius, double innerRadius, double length)
+        {
+            var outerVolume = Math.PI * outerRadius * outerRadius * length;
+            var innerVolume = Math.PI * innerRadius * innerRadius * length;
+            return (outerVolume, innerVolume);
+        }
+
+        private static (double outerMass, double innerMass) CalculateMasses(
+            double outerVolume, double innerVolume)
+        {
+            return (
+                outerMass: outerVolume * DensityKgPerM3,
+                innerMass: innerVolume * DensityKgPerM3);
         }
     }
+
+    /// <summary>
+    /// Результат расчёта массы детали
+    /// </summary>
+    /// <param name="vOut">Объём внешнего цилиндра (м³)</param>
+    /// <param name="vIn">Объём внутреннего цилиндра (м³)</param>
+    /// <param name="massOut">Масса внешнего цилиндра (кг)</param>
+    /// <param name="massIn">Масса внутреннего цилиндра (кг)</param>
+    public readonly record struct MassDetails(
+        double vOut,
+        double vIn,
+        double massOut,
+        double massIn);
 }

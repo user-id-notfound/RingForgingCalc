@@ -4,6 +4,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IDrawingService, DrawingService>();
+builder.Services.AddScoped<IForgingCalculationService, ForgingCalculationService>();
+builder.Services.AddLogging(config => config.AddConsole());
 
 var app = builder.Build();
 
